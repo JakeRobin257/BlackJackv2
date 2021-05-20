@@ -12,35 +12,81 @@ deck = {"2 of Spades": 2, "3 of Spades": 3, "4 of Spades": 4, "5 of Spades": 5, 
 		"2 of Diamonds": 2, "3 of Diamonds": 3, "4 of Diamonds": 4, "5 of Diamonds": 5, "6 of Diamonds": 6, "7 of Diamonds": 7, "8 of Diamonds": 8, 
 		"9 of Diamonds": 9, "10 of Diamonds": 10, "Jack of Diamonds": 10, "Queen of Diamonds": 10, "King of Diamonds": 10, "Ace of Diamonds": [1, 11]}
 
-card_names = list(deck.keys())
-card_values = list(deck.values())
-rand = random.randint(1, 53)
 
-player_cards = []
-player_score = 0
+def stick():
+	print("You chose to stick")
+
+
+
+
+
+def hit(card_names, card_values, player_cards, player_score):
+	rand = random.randint(1, len(card_names)+1)
+
+	card = card_names[rand]
+	card_value = card_values[rand]
+
+	card_names.remove(card)
+	card_values.pop(rand)
+
+	player_cards.append(card)
+	player_score += card_value
+
+	msg = "Your cards are: "
+
+	for card in player_cards:
+		msg += card + ", "
+	new_msg = msg[:-2]
+
+	print(new_msg)
+	print("Total score: " + str(player_score))
+	print("")
+	answer = input("Would you like to hit or stick? - ")
+	print("")
+
+	if answer.lower() == "hit":
+		hit(card_names, card_values, player_cards, player_score)
+
+	elif answer.lower() == "stick":
+		pass
 
 def draw_2_cards():
-	rand1 = random.randint(1, 53)
-	rand2 = random.randint(1, 53)
+	player_cards = []
+	player_score = 0
+
+	card_names = list(deck.keys())
+	card_values = list(deck.values())
+
+	rand1 = random.randint(0, 52)
+	rand2 = random.randint(0, 52)
+
 	card1 = card_names[rand1]
 	card2 = card_names[rand2]
+
+	card_names.remove(card1)
+	card_names.remove(card2)
+
 	card1_value = card_values[rand1]
 	card2_value = card_values[rand2]
+
+	card_values.pop(rand1)
+	card_values.pop(rand2)
+
 	player_score = card1_value + card2_value
 
 	print("Your cards are: " + card1 + ", " + card2)
 	print("Total score: " + str(player_score))
 	print("")
 	answer = input("Would you like to hit or stick? - ")
+	print("")
 
 	if answer.lower() == "hit":
 		player_cards.append(card1)
 		player_cards.append(card2)
+		hit(card_names, card_values, player_cards, player_score)
 
 	elif answer.lower() == "stick":
-		pass
+		stick()
 
-	print(player_cards)
-	print(player_score)
 
 draw_2_cards()
