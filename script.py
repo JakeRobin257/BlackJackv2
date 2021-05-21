@@ -1,3 +1,4 @@
+import os 
 import random
 
 deck = {"2 of Spades": 2, "3 of Spades": 3, "4 of Spades": 4, "5 of Spades": 5, "6 of Spades": 6, "7 of Spades": 7, "8 of Spades": 8, 
@@ -12,9 +13,13 @@ deck = {"2 of Spades": 2, "3 of Spades": 3, "4 of Spades": 4, "5 of Spades": 5, 
 		"2 of Diamonds": 2, "3 of Diamonds": 3, "4 of Diamonds": 4, "5 of Diamonds": 5, "6 of Diamonds": 6, "7 of Diamonds": 7, "8 of Diamonds": 8, 
 		"9 of Diamonds": 9, "10 of Diamonds": 10, "Jack of Diamonds": 10, "Queen of Diamonds": 10, "King of Diamonds": 10, "Ace of Diamonds": [1, 11]}
 
+def error():
+	os.system("clear")
+	print("")
+	print("Error - Invalid user input")
 
 def comp_opponent(card_names, card_values, comp_cards, comp_score):
-	rand = random.randint(1, len(card_names)+1)
+	rand = random.randint(0, len(card_names)-1)
 	card = card_names[rand]
 	card_value = card_values[rand]
 	card_names.remove(card)
@@ -28,6 +33,30 @@ def comp_opponent(card_names, card_values, comp_cards, comp_score):
 
 	return comp_score
 
+def print_cards_and_score(card_names, card_values, player_cards, player_score):	
+	os.system("clear")
+	msg = "Your cards are: "
+
+	for card in player_cards:
+		msg += card + ", "
+	new_msg = msg[:-2]
+
+	print(new_msg)
+	print("Total score: " + str(player_score))
+	print("")
+	answer = input("Would you like to hit or stick? - ")
+	print("")
+
+	if answer.lower() == "hit":
+		hit(card_names, card_values, player_cards, player_score)
+
+	elif answer.lower() == "stick":
+		stick(card_names, card_values, player_score)
+
+	else:
+		error()	
+
+
 def stick(card_names, card_values, player_score):
 	comp_cards = []
 	comp_score = 0
@@ -38,12 +67,24 @@ def stick(card_names, card_values, player_score):
 	if comp_score <= 21:
 		if player_score > comp_score:
 			print("Your oppenent scored " + str(comp_score) + ". You win!")
+			print("")
 		elif player_score < comp_score:
 			print("Your oppenent scored " + str(comp_score) + ". You lose.")
+			print("")
 		else:
 			print("You both scored " + str(comp_score) + ". It's a tie!")
+			print("")
 	else:
 		print("Your oppenent went bust! You win!")
+		print("")
+	answer = input("Would you like to try again? (y/n) - ")
+	if answer.lower() == "y":
+		os.system("clear")
+		draw_2_cards()
+	elif answer.lower() == "n":
+		pass
+	else:
+		error()
 
 def ace(player_score, *card_values):
 	for value in card_values:
@@ -57,7 +98,7 @@ def ace(player_score, *card_values):
 	return player_score
 	
 def hit(card_names, card_values, player_cards, player_score):
-	rand = random.randint(1, len(card_names)+1)
+	rand = random.randint(0, len(card_names)-1)
 
 	card = card_names[rand]
 	card_value = card_values[rand]
@@ -76,46 +117,37 @@ def hit(card_names, card_values, player_cards, player_score):
 		print("You have gone bust! You lose!")
 		print("")
 		answer = input("Would you like to try again? (y/n) - ")
-		if answer.lower == "y":
+		if answer.lower() == "y":
+			os.system("clear")
+			draw_2_cards()
+		elif answer.lower() == "n":
 			pass
 		else:
-			pass
+			error()
 	else:
-		msg = "Your cards are: "
-
-		for card in player_cards:
-			msg += card + ", "
-		new_msg = msg[:-2]
-
-		print(new_msg)
-		print("Total score: " + str(player_score))
-		print("")
-		answer = input("Would you like to hit or stick? - ")
-		print("")
-
-		if answer.lower() == "hit":
-			hit(card_names, card_values, player_cards, player_score)
-
-		elif answer.lower() == "stick":
-			stick(card_names, card_values, player_score)
-
+		print_cards_and_score(card_names, card_values, player_cards, player_score)
+		
 def draw_2_cards():
+	os.system("clear")
 	player_cards = []
 	player_score = 0
 
 	card_names = list(deck.keys())
 	card_values = list(deck.values())
 
-	rand1 = random.randint(0, 52)
-	rand2 = random.randint(0, 52)
+	rand1 = random.randint(0, 51)
+	rand2 = random.randint(0, 51)
 
-	card1 = card_names[12]
+	card1 = card_names[rand1]
 	card2 = card_names[rand2]
+
+	player_cards.append(card1)
+	player_cards.append(card2)
 
 	card_names.remove(card1)
 	card_names.remove(card2)
 
-	card1_value = card_values[12]
+	card1_value = card_values[rand1]
 	card2_value = card_values[rand2]
 	
 	card_values.pop(rand1)
@@ -126,19 +158,7 @@ def draw_2_cards():
 	else:
 		player_score = card1_value + card2_value
 
-	print("Your cards are: " + card1 + ", " + card2)
-	print("Total score: " + str(player_score))
-	print("")
-	answer = input("Would you like to hit or stick? - ")
-	print("")
-
-	if answer.lower() == "hit":
-		player_cards.append(card1)
-		player_cards.append(card2)
-		hit(card_names, card_values, player_cards, player_score)
-
-	elif answer.lower() == "stick":
-		stick(card_names, card_values, player_score)
+	print_cards_and_score(card_names, card_values, player_cards, player_score)
 
 
 draw_2_cards()
